@@ -1,6 +1,6 @@
 #92510, Lucia Filipa Lopes da Silva
 
-#CELULA
+#========================================Celula=================================================
 
 def cria_celula(v):
     """recebe o valor do estado de uma celula do qubit e devolve uma celula com esse valor"""
@@ -43,7 +43,7 @@ def celula_para_str(c):
             return str(c[0])
 
 
-#COORDENADA
+#=========================================Coordenada==============================================
 
 def cria_coordenada(l,c):
     """devolve a coordenada correspondente a linha l e a coluna c, introduzidas como argumentos"""
@@ -91,8 +91,8 @@ def coordenada_para_str(c):
     """recebe uma coordenada e devolve uma cadeia de caracteres"""
     return str((coordenada_linha(c),coordenada_coluna(c)))
     
-    
-#TABULEIRO
+
+#===============================================Tabuleiro=============================================
 
 def tabuleiro_inicial():
     """devolve o tabuleiro que representa o seu estado inicial do jogo"""
@@ -172,7 +172,9 @@ def tabuleiro_para_str(t):
     celula_para_str(tabuleiro_celula(t,(1,1))) + '.' + celula_para_str(tabuleiro_celula(t,(2,2))) \
     + '.|\n|..' + celula_para_str(tabuleiro_celula(t,(1,0))) + '.' + \
     celula_para_str(tabuleiro_celula(t,(2,1))) + '..|\n+-------+' 
-#PORTAS
+
+
+#================================================Portas===========================================
 
 def porta_x(t,a):
     """devolve um novo tabuleiro resultante de aplicar a porta x, que dependendo/
@@ -216,8 +218,19 @@ def porta_h(t,a):
                 t=tabuleiro_substitui_celula(t,tabuleiro_celula(t_aux,(i,2)),cria_coordenada(i,1))
         return t
 
+#==========================================Hello Quantum=======================================
 
-
+def hello_quantum(s):
+    print('Bem-vindo ao Hello Quantum!\nO seu objetivo e chegar ao tabuleiro:')
+    tab_str=''
+    jogada,i=0,0
+    while s[i]!=':':
+        tab_str=tab_str+s[i]
+        i = i+1
+    i=i+1
+    for e in range(i,len(s)):
+        jogada= jogada+eval(s[e])
+    print(tabuleiro_para_str(str_para_tabuleiro(tab_str)))
             
 
 
