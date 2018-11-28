@@ -1,4 +1,4 @@
-#92510, Lúcia Filipa Lopes da Silva
+#92510, Lucia Filipa Lopes da Silva
 
 #CELULA
 
@@ -60,10 +60,29 @@ def coordenada_coluna(c):
     """recebe uma coordenada e devolve a coluna"""
     return c[1]
 
-def eh_coordenada(c):
-    """recebe um argumento e devolve 'verdadeiro' ou 'falso', consoante o argumento seja uma coordenada ou nao"""
-    return  isinstance(c,tuple) and c!=()
-        
+def eh_coordenada(coor):
+    """recebe um argumento e devolve 'verdadeiro' ou 'falso',/
+     consoante o argumento seja uma coordenada ou nao"""
+    if isinstance(coor,tuple) and coor!=(): 
+        l=coordenada_linha(coor)
+        c=coordenada_coluna(coor)
+        if l==0 or l==1 or l==2 and c==0 or c==1 or c==2: 
+            if l==2:
+                if c!=1 and c!=2:
+                    return False                             #coordenada (2,0) nao existe no tabuleiro    
+        else:
+            return False
+    return True
+
+def coor_aux(coor):
+    """funcao auxiliar que recebe uma coordenada do terceiro tuplo que representa o tabuleiro\
+    e associa a corÂ«ordenada recebida a posicao correta da tabuleiro, por ex, (2,1) representa\
+    o valor de (2,0) do tuplo que representa o tabuleiro"""
+    if coordenada_linha(coor)==2:
+        return (coordenada_linha(coor),coordenada_coluna(coor)-1)
+    else:
+        return coor
+
 def coordenadas_iguais(c1,c2):
     """recebe duas coordendas e devolve 'verdadeiro' ou 'falso' se sao iguais ou nao"""
     return c1==c2
@@ -79,37 +98,128 @@ def tabuleiro_inicial():
     """devolve o tabuleiro que representa o seu estado inicial do jogo"""
     return ((-1,-1,-1),(0,0,-1),(0,-1))  
     
-def eh_tabuleiro(t):
-    """funcao auxiliar que avalia se o argumento e um tabuleiro ou nao"""
-    if isinstance(t,tuple) and len(t)==3:
-        for i in range(len(t)):
-            if not isinstance(t[i],tuple) or len(t[0])!=len(t[1])!=3 or len(t[2])!=2:
+def str_valida(s):
+    """funcao auxiliar que avalia se o argumento e a representacao interna de um tabuleiro,\
+    ou seja, uma cadeia de caracteres que representa um tabuleiro"""
+    return eh_tabuleiro(eval(s))                                                              
+
+def str_para_tabuleiro(s):
+    """recebe uma cadeia de caracteres e devolve o tabuleiro correspondente""" 
+    if not str_valida(s):
+        raise ValueError ('tabuleiro_str: argumento invalido')
+    else:
+        return (eval(s))
+
+def tabuleiro_dimensao(t):
+    """recebe um tabueiro e devolve o numero de linhas (e colunas) que possui< """
+    return len(t)                                                                    
+
+def tabuleiro_celula(t,coor):
+    """recebe um tabuleiro e uma coordenada e devolve a celula dessa posicao"""
+    coor=coor_aux(coor)
+    return cria_celula(t[coordenada_linha(coor)][coordenada_coluna(coor)])
+
+def tabuleiro_substitui_celula(t,cel,coor):
+    """recebe um tabuleiro, uma celula e uma coordenada e devolve um tabuleiro que substitui a\
+     celula na coordenada dada pela celula dada"""
+    if not eh_tabuleiro(t) or not eh_celula(cel) or not eh_coordenada(coor):          
+        raise ValueError ('tabuleiro_substitui_celula: argumentos invalidos')
+    else:
+        t=substitui(t,coor,cel)
+        return t
+        
+def substitui(t,coor,cel):
+    """funcao auxiliar que troca uma celula por outra"""   
+    coor=coor_aux(coor)   
+    lst=[list(t[0]),list(t[1]),list(t[2])]
+    l=coordenada_linha(coor)
+    c=coordenada_coluna(coor)
+    lst[l][c]=obter_valor(cel)
+    t = (tuple(lst[0]),tuple(lst[1]),tuple(lst[2]))
+    return t
+
+def tabuleiro_inverte_estado(t,coor):                 
+    """recebe um tabuleiro e uma coordenada e devolve um tabuleiro com o estado da\
+    celula dessa coordenada invertida"""
+    if not eh_tabuleiro(t) or not eh_coordenada(coor): 
+        raise ValueError ('tabuleiro_inverte_estado: argumentos invalidos')
+    else:
+        t=substitui(t,coor,inverte_estado(tabuleiro_celula(t,coor)))
+        return t
+
+def eh_tabuleiro(arg):
+    """recebe um argumento e avalia se e um tabuleiro"""
+    if isinstance(arg,tuple) and len(arg)==3:
+        for i in range(len(arg)):
+            if not isinstance(arg[i],tuple) or len(arg[0])!=len(arg[1])!=3 or len(arg[2])!=2:
                 return False
             else:           
-                for e in t[i]:
-                    if (e!=0 and e!=1 and e!=-1): #unicos elementos possiveis dos tuplos 
+                for e in range(len(arg[i])):
+                    if not (arg[i][e]==0 or arg[i][e]==1 or arg[i][e]==-1):
                         return False
         return True
     return False
 
+def tabuleiros_iguais(t1,t2):
+    """recebe dois tabuleiros e avalia se sao iguais"""
+    return t1==t2
 
-def tabuleiro_str(t):
-    """devolve a cadeia de caracteres que representa o tabuleiro"""
-    if not eh_tabuleiro(t):
-        raise ValueError ('tabuleiro_str: argumento invalido')
+def tabuleiro_para_str(t):
+    """recebe um tabuleiro e devolve a cadeia de caracteres que o representa"""
+    return'+-------+\n|...' + celula_para_str(tabuleiro_celula(t,(0,2))) + '...|\n|..' + \
+    celula_para_str(tabuleiro_celula(t,(0,1))) + '.' + celula_para_str(tabuleiro_celula(t,(1,2)))\
+    + '..|\n|.' + celula_para_str(tabuleiro_celula(t,(0,0))) + '.' + \
+    celula_para_str(tabuleiro_celula(t,(1,1))) + '.' + celula_para_str(tabuleiro_celula(t,(2,2))) \
+    + '.|\n|..' + celula_para_str(tabuleiro_celula(t,(1,0))) + '.' + \
+    celula_para_str(tabuleiro_celula(t,(2,1))) + '..|\n+-------+' 
+#PORTAS
+
+def porta_x(t,a):
+    """devolve um novo tabuleiro resultante de aplicar a porta x, que dependendo/
+    do lado(esquerdo ou direito),troca os elementos entre 1 e 0"""
+    if not eh_tabuleiro(t) or (a!='E' and a!='D'):
+        raise ValueError('porta_x: argumentos invalidos.')
     else:
-        n=list(t)
-        for i in range(len(n)):
-            n[i]=list(n[i]) 
-            for e in range(len(n[i])):
-                if (n[i][e])== -1: 
-                    n[i][e] = 'x'
+        for i in range(tabuleiro_dimensao(t)):
+            if a=='E':
+                t=tabuleiro_inverte_estado(t,cria_coordenada(tabuleiro_dimensao(t)-2,i))
+            else:
+                t=tabuleiro_inverte_estado(t,cria_coordenada(i,tabuleiro_dimensao(t)-2))
+        return t
 
-    return'+-------+\n|...' + str(n[0][2]) + '...|\n|..' + str(n[0][1]) + '.' + \
-          str(n[1][2]) + '..|\n|.' + str(n[0][0]) + '.' + str(n[1][1]) + '.' + \
-          str(n[2][1]) + '.|\n|..' + str(n[1][0]) + '.' + str(n[2][0]) + '..|\n+-------+' 
-    
-    
-    
+def porta_z(t,a):
+    """devolve um novo tabuleiro resultante de aplicar a porta z, que dependendo/
+    do lado(esquerdo ou direito),troca os elementos entre 1 e 0"""
+    if not eh_tabuleiro(t) or (a!='E' and a!='D'):
+        raise ValueError('porta_z: argumentos invalidos.')
+    else:
+        for i in range(tabuleiro_dimensao(t)):
+            if a=='E':
+                t=tabuleiro_inverte_estado(t,cria_coordenada(tabuleiro_dimensao(t)-3,i))
+            else:
+                t=tabuleiro_inverte_estado(t,cria_coordenada(i,tabuleiro_dimensao(t)-1))
+        return t
+
+def porta_h(t,a):
+    """devolve um novo tabuleiro resultante de aplicar a porta h, que dependendo/
+    do lado(esquerdo ou direito),troca as colunas do tabuleiro"""
+    if not eh_tabuleiro(t) or (a!='E' and a!='D'):
+        raise ValueError('porta_h: argumentos invalidos.')
+    else:
+        for i in range(tabuleiro_dimensao(t)):
+            t_aux=t
+            if a=='E':
+                t=tabuleiro_substitui_celula(t,tabuleiro_celula(t,(1,i)),(0,i))
+                t=tabuleiro_substitui_celula(t,tabuleiro_celula(t_aux,(0,i)),(1,i))
+            else:
+                t=tabuleiro_substitui_celula(t,tabuleiro_celula(t,(i,1)),cria_coordenada(i,2))
+                t=tabuleiro_substitui_celula(t,tabuleiro_celula(t_aux,(i,2)),cria_coordenada(i,1))
+        return t
+
+
+
+            
+
+
 
 
