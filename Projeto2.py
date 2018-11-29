@@ -221,17 +221,44 @@ def porta_h(t,a):
 #==========================================Hello Quantum=======================================
 
 def hello_quantum(s):
+    """recebe uma cadeia de caracteres com o tabuleiro a que se qer chegar e o numero\
+    de jogadas maximo que se pode fazer"""
     print('Bem-vindo ao Hello Quantum!\nO seu objetivo e chegar ao tabuleiro:')
     tab_str=''
     jogada,i=0,0
+    t=()
+    tentativa=0
     while s[i]!=':':
         tab_str=tab_str+s[i]
         i = i+1
-    i=i+1
-    for e in range(i,len(s)):
+    for e in range(i+1,len(s)):
         jogada= jogada+eval(s[e])
-    print(tabuleiro_para_str(str_para_tabuleiro(tab_str)))
-            
+    print(tabuleiro_para_str(str_para_tabuleiro(tab_str)),'\nComecando com o tabuleiro que se segue:\
+    \n',tabuleiro_para_str(tabuleiro_inicial()))
+    while tabuleiros_iguais(t,tab_str)==False:
+        t=tabuleiro_inicial()
+        porta=input('Escolha uma porta para aplicar (X, Z ou H): ')
+        lado=input('Escolha um qubit para analisar (E ou D): ')
+        if str(porta)=='X':
+            t=porta_x(t,str(lado))
+            print(tabuleiro_para_str(t))
+            tentativa=tentativa+1
+        elif str(porta)=='Z':
+            t=porta_z(t,str(lado))
+            print(tabuleiro_para_str(t))
+            tentativa=tentativa+1
+        else:
+            t=tabuleiro_para_str(porta_h(t,str(lado)))
+            print(tabuleiro_para_str(t))
+            tentativa=tentativa+1
+    if tentativa==jogada:
+        print('Parabens, conseguiu converter o tabuleiro em 4 jogadas!')
+        return True
+    else:
+        return False
+
+
+     
 
 
 
