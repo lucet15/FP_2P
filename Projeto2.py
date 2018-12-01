@@ -100,8 +100,7 @@ def str_valida(s):
     ou seja, uma cadeia de caracteres que representa um tabuleiro"""
     if isinstance(s,str):
         s=eval(s)
-        if len([s])==tabuleiro_dimensao(tabuleiro_inicial()):           
-            return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])
+        return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])
     else:
         return False                                        
 
@@ -218,7 +217,7 @@ def porta_h(t,a):
                 t=tabuleiro_substitui_celula(t,celula_2,cria_coordenada(1,i))
             else:
                 celula_1=tabuleiro_celula(t,cria_coordenada(i,1))
-                celula_2=tabuleiro_celula(t,cria_coordenada(0,2))
+                celula_2=tabuleiro_celula(t,cria_coordenada(i,2))
                 t=tabuleiro_substitui_celula(t,celula_1,cria_coordenada(i,2))
                 t=tabuleiro_substitui_celula(t,celula_2,cria_coordenada(i,1))
         return t
@@ -231,14 +230,14 @@ def hello_quantum(s):
     print('Bem-vindo ao Hello Quantum!\nO seu objetivo e chegar ao tabuleiro:')
     tab_str=''
     jogada,i=0,0
-    t=()
     tentativa=0
     while s[i]!=':':
         tab_str=tab_str+s[i]
         i = i+1
     for e in range(i+1,len(s)):
         jogada= jogada+eval(s[e])
-    print(tabuleiro_para_str(str_para_tabuleiro(tab_str)))
+    tab_str=str_para_tabuleiro(tab_str)
+    print(tabuleiro_para_str(tab_str))
     print('Comecando com o tabuleiro que se segue:')
     print(tabuleiro_para_str(tabuleiro_inicial()))
     t=tabuleiro_inicial()
@@ -258,7 +257,6 @@ def hello_quantum(s):
             t=porta_h(t,str(lado))
             print(tabuleiro_para_str(t))
             tentativa=tentativa+1
-
     if tabuleiros_iguais(t,tab_str):
         print('Parabens, conseguiu converter o tabuleiro em',tentativa,'jogadas!')
     else:
