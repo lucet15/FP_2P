@@ -238,8 +238,9 @@ def hello_quantum(s):
         i = i+1
     for e in range(i+1,len(s)):
         jogada= jogada+eval(s[e])
-    print(tabuleiro_para_str(str_para_tabuleiro(tab_str)),'\nComecando com o tabuleiro que se segue:\
-    \n',tabuleiro_para_str(tabuleiro_inicial()))
+    print(tabuleiro_para_str(str_para_tabuleiro(tab_str)))
+    print('Comecando com o tabuleiro que se segue:')
+    print(tabuleiro_para_str(tabuleiro_inicial()))
     t=tabuleiro_inicial()
     while jogada!=tentativa:
         porta=input('Escolha uma porta para aplicar (X, Z ou H): ')
