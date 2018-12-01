@@ -26,14 +26,16 @@ def trocar(n):
         n = 1
     return n
 
-def eh_celula(n):
+def eh_celula(c):
     """recebe um argumento e devolve 'verdadeiro' ou falso consoante este seja uma celula"""
-    return isinstance(n,list) and n!=[]
+    return isinstance(c,list) and c!=[] and obter_valor(c) in [0,1,-1]
     
 def celulas_iguais(c1, c2):
     """recebe duas celulas e devolve 'verdadeiro' ou 'falso' se estas sao iguais ou nao"""
     if eh_celula(c1) and eh_celula(c2):
         return obter_valor(c1)==obter_valor(c2)   
+    else:
+        return False
     
 def celula_para_str(c):
     """recebe uma celula e devolve uma cadeia de caracteres"""
@@ -64,7 +66,7 @@ def coordenada_coluna(c):
 def eh_coordenada(coor):
     """recebe um argumento e devolve 'verdadeiro' ou 'falso',\
      consoante o argumento seja uma coordenada ou nao"""
-    if isinstance(coor,list) and coor!=[]: 
+    if isinstance(coor,list) and coor!=[] and len(coor)==2:
         l=coordenada_linha(coor)
         c=coordenada_coluna(coor)
         return l in [0,1,2] and c in [0,1,2]
@@ -82,7 +84,10 @@ def coor_aux(coor):
 
 def coordenadas_iguais(c1,c2):
     """recebe duas coordendas e devolve 'verdadeiro' ou 'falso' se sao iguais ou nao"""
-    return c1==c2
+    if eh_coordenada(c1) and eh_coordenada(c2):
+        return c1==c2
+    else:
+        return False
 
 def coordenada_para_str(c):
     """recebe uma coordenada e devolve uma cadeia de caracteres"""
@@ -100,14 +105,15 @@ def str_valida(s):
     ou seja, uma cadeia de caracteres que representa um tabuleiro"""
     if isinstance(s,str):
         s=eval(s)
-        return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])
+        if isinstance(s,tuple):
+            return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])
     else:
         return False                                        
 
 def str_para_tabuleiro(s):
     """recebe uma cadeia de caracteres e devolve o tabuleiro correspondente""" 
     if not str_valida(s):
-        raise ValueError ('tabuleiro_str: argumento invalido.')
+        raise ValueError ('str_para_tabuleiro: argumento invalido.')
     else:
         s=eval(s)
         return [list(s[0]),list(s[1]),list(s[2])]
@@ -147,15 +153,17 @@ def tabuleiro_inverte_estado(t,coor):
         t=substitui(t,coor,inverte_estado(tabuleiro_celula(t,coor)))
         return t
 
-def eh_tabuleiro(arg):
+def eh_tabuleiro(t):
     """recebe um argumento e avalia se e um tabuleiro"""
-    if isinstance(arg,list) and len(arg)==3:
-        for i in range(len(arg)):
-            if not isinstance(arg[i],list) or len(arg[0])!=len(arg[1])!=3 or len(arg[2])!=2:
+    if isinstance(t,list) and len(t)==tabuleiro_dimensao(tabuleiro_inicial()):
+        for i in range(len(t)):
+            if not isinstance(t[i],list): 
+                return False
+            if not len(t[0])==len(t[1])==3 or not len(t[2])==2: 
                 return False
             else:           
-                for e in range(len(arg[i])):
-                    if not (arg[i][e]==0 or arg[i][e]==1 or arg[i][e]==-1):
+                for e in t[i]:
+                    if (e!=0 and e!=1 and e!=-1):
                         return False
         return True
     return False
@@ -164,6 +172,8 @@ def tabuleiros_iguais(t1,t2):
     """recebe dois tabuleiros e avalia se sao iguais"""
     if eh_tabuleiro(t1) and eh_tabuleiro(t2):
         return t1==t2
+    else:
+        return False
 
 def tabuleiro_para_str(t):
     """recebe um tabuleiro e devolve a cadeia de caracteres que o representa"""
