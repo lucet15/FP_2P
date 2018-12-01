@@ -4,7 +4,7 @@
 
 def cria_celula(v):
     """recebe o valor do estado de uma celula do qubit e devolve uma celula com esse valor"""
-    if v==1 or v==0 or v==-1:
+    if v==1 or v==0 or v==-1:           #0-inativo, 1-ativo, (-1)-incerto
         return [v]
     else:
         raise ValueError ('cria_celula: argumento invalido.')
@@ -19,7 +19,7 @@ def inverte_estado(c):
     return c                        
 
 def trocar(n):
-    """funcao auxiliar que troca um elemento 0, 1 para 1,0"""
+    """funcao auxiliar que troca um elemento 0,1 para 1,0"""
     if n == 1:
         n = 0
     elif n == 0:
@@ -27,11 +27,11 @@ def trocar(n):
     return n
 
 def eh_celula(c):
-    """recebe um argumento e devolve 'verdadeiro' ou falso consoante este seja uma celula"""
+    """recebe um argumento e avalia se e uma celula"""
     return isinstance(c,list) and c!=[] and obter_valor(c) in [0,1,-1]
     
 def celulas_iguais(c1, c2):
-    """recebe duas celulas e devolve 'verdadeiro' ou 'falso' se estas sao iguais ou nao"""
+    """recebe duas celulas e avalia se sao iguais ou nao"""
     if eh_celula(c1) and eh_celula(c2):
         return obter_valor(c1)==obter_valor(c2)   
     else:
@@ -49,7 +49,7 @@ def celula_para_str(c):
 #=========================================Coordenada==============================================
 
 def cria_coordenada(l,c):
-    """devolve a coordenada correspondente a linha l e a coluna c, introduzidas como argumentos"""
+    """recebe dois numeros e devolve a coordenada correspondente a linha l e a coluna c"""
     if l not in [0,1,2] or c not in [0,1,2]:
         raise ValueError ('cria_coordenada: argumentos invalidos.')
     else:
@@ -64,8 +64,7 @@ def coordenada_coluna(c):
     return c[1]
 
 def eh_coordenada(coor):
-    """recebe um argumento e devolve 'verdadeiro' ou 'falso',\
-     consoante o argumento seja uma coordenada ou nao"""
+    """recebe um argumento e avalia se o argumento e uma coordenada ou nao"""
     if isinstance(coor,list) and coor!=[] and len(coor)==2:
         l=coordenada_linha(coor)
         c=coordenada_coluna(coor)
@@ -74,16 +73,16 @@ def eh_coordenada(coor):
         return False
 
 def coor_aux(coor):
-    """funcao auxiliar que recebe uma coordenada do terceiro tuplo que representa o tabuleiro\
-    e associa a coordenada recebida a posicao correta da tabuleiro, por ex, (2,1) representa\
-    o valor de (2,0) do tuplo que representa o tabuleiro"""
+    """funcao auxiliar que recebe uma coordenada da terceira lista que representa o tabuleiro\
+    e associa a coordenada recebida a posicao correta da tabuleiro, por ex, [2,1] representa\
+    o valor de [2,0] da lista que representa o tabuleiro"""
     if coordenada_linha(coor)==2:
         return [coordenada_linha(coor),coordenada_coluna(coor)-1]
     else:
         return coor
 
 def coordenadas_iguais(c1,c2):
-    """recebe duas coordendas e devolve 'verdadeiro' ou 'falso' se sao iguais ou nao"""
+    """recebe duas coordendas e avalia se sao iguais ou nao"""
     if eh_coordenada(c1) and eh_coordenada(c2):
         return c1==c2
     else:
@@ -101,12 +100,13 @@ def tabuleiro_inicial():
     return [[-1,-1,-1],[0,0,-1],[0,-1]]  
     
 def str_valida(s):
-    """funcao auxiliar que avalia se o argumento e a representacao interna de um tabuleiro,\
-    ou seja, uma cadeia de caracteres que representa um tabuleiro"""
+    """funcao auxiliar que avalia se a cadeia de caracteres que representa um tabuleiro"""
     if isinstance(s,str):
         s=eval(s)
         if isinstance(s,tuple):
-            return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])
+            for i in range(len(s)):
+                if isinstance(s[i],tuple):
+                    return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])
     else:
         return False                                        
 
@@ -129,7 +129,7 @@ def tabuleiro_celula(t,coor):
 
 def tabuleiro_substitui_celula(t,cel,coor):
     """recebe um tabuleiro, uma celula e uma coordenada e devolve um tabuleiro que substitui a\
-     celula na coordenada dada pela celula dada"""
+     celula na coordenada dada pela celula introduzida"""
     if not eh_tabuleiro(t) or not eh_celula(cel) or not eh_coordenada(coor):          
         raise ValueError ('tabuleiro_substitui_celula: argumentos invalidos.')
     else:
@@ -137,7 +137,7 @@ def tabuleiro_substitui_celula(t,cel,coor):
         return t
         
 def substitui(t,coor,cel):
-    """funcao auxiliar que troca uma celula por outra"""   
+    """funcao auxiliar que troca uma celula de uma posicao do tabuleiro por outra"""
     coor=coor_aux(coor)   
     l=coordenada_linha(coor)
     c=coordenada_coluna(coor)
@@ -235,7 +235,7 @@ def porta_h(t,a):
 #==========================================Hello Quantum=======================================
 
 def hello_quantum(s):
-    """recebe uma cadeia de caracteres com o tabuleiro a que se qer chegar e o numero\
+    """recebe uma cadeia de caracteres com o tabuleiro a que se quer chegar e o numero\
     de jogadas maximo que se pode fazer"""
     print('Bem-vindo ao Hello Quantum!\nO seu objetivo e chegar ao tabuleiro:')
     tab_str=''
