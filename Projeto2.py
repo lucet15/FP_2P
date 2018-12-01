@@ -73,7 +73,7 @@ def eh_coordenada(coor):
 
 def coor_aux(coor):
     """funcao auxiliar que recebe uma coordenada do terceiro tuplo que representa o tabuleiro\
-    e associa a cor«ordenada recebida a posicao correta da tabuleiro, por ex, (2,1) representa\
+    e associa a coordenada recebida a posicao correta da tabuleiro, por ex, (2,1) representa\
     o valor de (2,0) do tuplo que representa o tabuleiro"""
     if coordenada_linha(coor)==2:
         return [coordenada_linha(coor),coordenada_coluna(coor)-1]
@@ -239,7 +239,7 @@ def hello_quantum(s):
     for e in range(i+1,len(s)):
         jogada= jogada+eval(s[e])
     print(tabuleiro_para_str(str_para_tabuleiro(tab_str)),'\nComecando com o tabuleiro que se segue:\
-    \n'tabuleiro_para_str(tabuleiro_inicial()))
+    \n',tabuleiro_para_str(tabuleiro_inicial()))
     t=tabuleiro_inicial()
     while jogada!=tentativa:
         porta=input('Escolha uma porta para aplicar (X, Z ou H): ')
