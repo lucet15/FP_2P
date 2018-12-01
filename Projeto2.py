@@ -7,7 +7,7 @@ def cria_celula(v):
     if v==1 or v==0 or v==-1:
         return [v]
     else:
-        raise ValueError ('cria_celula: argumento invalido')
+        raise ValueError ('cria_celula: argumento invalido.')
     
 def obter_valor(c):
     """recebe uma celula e devolve o seu valor"""
@@ -32,7 +32,8 @@ def eh_celula(n):
     
 def celulas_iguais(c1, c2):
     """recebe duas celulas e devolve 'verdadeiro' ou 'falso' se estas sao iguais ou nao"""
-    return obter_valor(eh_celula(c1))==obter_valor(eh_celula(c2))           
+    if eh_celula(c1) and eh_celula(c2):
+        return obter_valor(c1)==obter_valor(c2)   
     
 def celula_para_str(c):
     """recebe uma celula e devolve uma cadeia de caracteres"""
@@ -48,7 +49,7 @@ def celula_para_str(c):
 def cria_coordenada(l,c):
     """devolve a coordenada correspondente a linha l e a coluna c, introduzidas como argumentos"""
     if l not in [0,1,2] or c not in [0,1,2]:
-        raise ValueError ('cria_coordenada: argumentos invalidos')
+        raise ValueError ('cria_coordenada: argumentos invalidos.')
     else:
         return [l,c]
 
@@ -61,14 +62,14 @@ def coordenada_coluna(c):
     return c[1]
 
 def eh_coordenada(coor):
-    """recebe um argumento e devolve 'verdadeiro' ou 'falso',/
+    """recebe um argumento e devolve 'verdadeiro' ou 'falso',\
      consoante o argumento seja uma coordenada ou nao"""
     if isinstance(coor,list) and coor!=[]: 
         l=coordenada_linha(coor)
         c=coordenada_coluna(coor)
-        if l in [0,1,2] and c in [0,1,2]: 
-            return True 
-    return False
+        return l in [0,1,2] and c in [0,1,2]
+    else:
+        return False
 
 def coor_aux(coor):
     """funcao auxiliar que recebe uma coordenada do terceiro tuplo que representa o tabuleiro\
@@ -97,19 +98,23 @@ def tabuleiro_inicial():
 def str_valida(s):
     """funcao auxiliar que avalia se o argumento e a representacao interna de um tabuleiro,\
     ou seja, uma cadeia de caracteres que representa um tabuleiro"""
-    s=eval(s)           
-    return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])                                                   
+    if isinstance(s,str):
+        s=eval(s)
+        if len([s])==tabuleiro_dimensao(tabuleiro_inicial()):           
+            return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])
+    else:
+        return False                                        
 
 def str_para_tabuleiro(s):
     """recebe uma cadeia de caracteres e devolve o tabuleiro correspondente""" 
     if not str_valida(s):
-        raise ValueError ('tabuleiro_str: argumento invalido')
+        raise ValueError ('tabuleiro_str: argumento invalido.')
     else:
         s=eval(s)
         return [list(s[0]),list(s[1]),list(s[2])]
 
 def tabuleiro_dimensao(t):
-    """recebe um tabueiro e devolve o numero de linhas (e colunas) que possui< """
+    """recebe um tabueiro e devolve o numero de linhas (e colunas) que possui"""
     return len(t)                                                                    
 
 def tabuleiro_celula(t,coor):
@@ -121,7 +126,7 @@ def tabuleiro_substitui_celula(t,cel,coor):
     """recebe um tabuleiro, uma celula e uma coordenada e devolve um tabuleiro que substitui a\
      celula na coordenada dada pela celula dada"""
     if not eh_tabuleiro(t) or not eh_celula(cel) or not eh_coordenada(coor):          
-        raise ValueError ('tabuleiro_substitui_celula: argumentos invalidos')
+        raise ValueError ('tabuleiro_substitui_celula: argumentos invalidos.')
     else:
         t=substitui(t,coor,cel)
         return t
@@ -138,7 +143,7 @@ def tabuleiro_inverte_estado(t,coor):
     """recebe um tabuleiro e uma coordenada e devolve um tabuleiro com o estado da\
     celula dessa coordenada invertida"""
     if not eh_tabuleiro(t) or not eh_coordenada(coor): 
-        raise ValueError ('tabuleiro_inverte_estado: argumentos invalidos')
+        raise ValueError ('tabuleiro_inverte_estado: argumentos invalidos.')
     else:
         t=substitui(t,coor,inverte_estado(tabuleiro_celula(t,coor)))
         return t
@@ -158,7 +163,8 @@ def eh_tabuleiro(arg):
 
 def tabuleiros_iguais(t1,t2):
     """recebe dois tabuleiros e avalia se sao iguais"""
-    return t1==t2
+    if eh_tabuleiro(t1) and eh_tabuleiro(t2):
+        return t1==t2
 
 def tabuleiro_para_str(t):
     """recebe um tabuleiro e devolve a cadeia de caracteres que o representa"""
@@ -233,7 +239,7 @@ def hello_quantum(s):
     for e in range(i+1,len(s)):
         jogada= jogada+eval(s[e])
     print(tabuleiro_para_str(str_para_tabuleiro(tab_str)),'\nComecando com o tabuleiro que se segue:\
-    \n',tabuleiro_para_str(tabuleiro_inicial()))
+    \n'tabuleiro_para_str(tabuleiro_inicial()))
     t=tabuleiro_inicial()
     while jogada!=tentativa:
         porta=input('Escolha uma porta para aplicar (X, Z ou H): ')
