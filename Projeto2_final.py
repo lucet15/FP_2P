@@ -33,9 +33,8 @@ def eh_celula(c):
 def celulas_iguais(c1, c2):
     """recebe duas celulas e avalia se sao iguais ou nao"""
     if eh_celula(c1) and eh_celula(c2):
-        return obter_valor(c1)==obter_valor(c2)   
-    else:
-        return False
+        return obter_valor(c1)==obter_valor(c2)
+    return False
     
 def celula_para_str(c):
     """recebe uma celula e devolve uma cadeia de caracteres"""
@@ -69,8 +68,7 @@ def eh_coordenada(coor):
         l=coordenada_linha(coor)
         c=coordenada_coluna(coor)
         return l in [0,1,2] and c in [0,1,2]
-    else:
-        return False
+    return False
 
 def coor_aux(coor):
     """funcao auxiliar que recebe uma coordenada da terceira lista que representa o tabuleiro\
@@ -85,8 +83,7 @@ def coordenadas_iguais(c1,c2):
     """recebe duas coordendas e avalia se sao iguais ou nao"""
     if eh_coordenada(c1) and eh_coordenada(c2):
         return c1==c2
-    else:
-        return False
+    return False
 
 def coordenada_para_str(c):
     """recebe uma coordenada e devolve uma cadeia de caracteres"""
@@ -164,15 +161,9 @@ def eh_tabuleiro(t):
     """recebe um argumento e avalia se e um tabuleiro"""
     if isinstance(t,list) and len(t)==tabuleiro_dimensao(tabuleiro_inicial()):
         for i in range(len(t)):
-            if not isinstance(t[i],list): 
-                return False
-            if not len(t[0])==len(t[1])==3 or not len(t[2])==2: 
-                return False
-            else:           
+            if isinstance(t[i],list) and len(t[0])==len(t[1])==3 and len(t[2])==2:         
                 for e in t[i]:
-                    if (e!=[0] and e!=[1] and e!=[-1]):
-                        return False
-        return True
+                    return eh_celula(e)
     return False
 
 def tabuleiros_iguais(t1,t2):
