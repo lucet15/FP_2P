@@ -40,7 +40,7 @@ def celulas_iguais(c1, c2):
 def celula_para_str(c):
     """recebe uma celula e devolve uma cadeia de caracteres"""
     if eh_celula(c):
-        if c[0]==-1:
+        if c==[-1]:
             return 'x'
         else:
             return str(c[0])
@@ -97,7 +97,7 @@ def coordenada_para_str(c):
 
 def tabuleiro_inicial():
     """devolve o tabuleiro que representa o seu estado inicial do jogo"""
-    return [[-1,-1,-1],[0,0,-1],[0,-1]]  
+    return [[[-1],[-1],[-1]],[[0],[0],[-1]],[[0],[-1]]]  
     
 def str_valida(s):
     """funcao auxiliar que avalia se a cadeia de caracteres que representa um tabuleiro"""
@@ -106,9 +106,16 @@ def str_valida(s):
         if isinstance(s,tuple):
             for i in range(len(s)):
                 if isinstance(s[i],tuple):
-                    return eh_tabuleiro([list(s[0]),list(s[1]),list(s[2])])
-    else:
-        return False                                        
+                    return eh_tabuleiro(aux_lista(s))                                     
+
+def aux_lista(s):
+    """funcao auxiliar que recebe uma cadeia de caracteres correspondente a um tabuleiro e devolve\
+    a lista correspondente"""
+    t=[list(s[0]),list(s[1]),list(s[2])]
+    for i in range(len(s)):
+        for e in range(len(t[i])):
+            t[i][e]=cria_celula(t[i][e])
+    return t
 
 def str_para_tabuleiro(s):
     """recebe uma cadeia de caracteres e devolve o tabuleiro correspondente""" 
@@ -116,7 +123,7 @@ def str_para_tabuleiro(s):
         raise ValueError ('str_para_tabuleiro: argumento invalido.')
     else:
         s=eval(s)
-        return [list(s[0]),list(s[1]),list(s[2])]
+        return aux_lista(s)
 
 def tabuleiro_dimensao(t):
     """recebe um tabueiro e devolve o numero de linhas (e colunas) que possui"""
@@ -125,7 +132,7 @@ def tabuleiro_dimensao(t):
 def tabuleiro_celula(t,coor):
     """recebe um tabuleiro e uma coordenada e devolve a celula dessa posicao"""
     coor=coor_aux(coor)
-    return cria_celula(t[coordenada_linha(coor)][coordenada_coluna(coor)])
+    return t[coordenada_linha(coor)][coordenada_coluna(coor)]
 
 def tabuleiro_substitui_celula(t,cel,coor):
     """recebe um tabuleiro, uma celula e uma coordenada e devolve um tabuleiro que substitui a\
@@ -141,7 +148,7 @@ def substitui(t,coor,cel):
     coor=coor_aux(coor)   
     l=coordenada_linha(coor)
     c=coordenada_coluna(coor)
-    t[l][c]=obter_valor(cel)
+    t[l][c]=cel
     return t
 
 def tabuleiro_inverte_estado(t,coor):                 
@@ -163,7 +170,7 @@ def eh_tabuleiro(t):
                 return False
             else:           
                 for e in t[i]:
-                    if (e!=0 and e!=1 and e!=-1):
+                    if (e!=[0] and e!=[1] and e!=[-1]):
                         return False
         return True
     return False
